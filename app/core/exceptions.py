@@ -39,7 +39,7 @@ class InvalidTokenTypeException(HTTPException):
         )
 
 
-class InactivateUserException(HTTPException):
+class InactiveUserException(HTTPException):
     """Raised when a deactivated user tries to log in."""
     def __init__(self) -> None:
         super().__init__(
