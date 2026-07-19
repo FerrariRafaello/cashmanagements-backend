@@ -5,6 +5,7 @@ from uuid import UUID
 from app.models.user import User
 from app.schemas.user import UserCreate
 from app.core.security import hash_password, verify_password
+from app.core.exceptions import UserAlreadyExistsException
 from app.schemas.user import UserCreate, UserUpdate
 
 
@@ -39,6 +40,7 @@ def update_user(db: Session, user_id: UUID, user_data: "UserUpdate") -> User | N
     """
     Updates user fields (name, email, password).
     Only updates fields that were actually provided.
+    Raises 409 if the new email is already in use by another user.
     """
     user = get_user_by_id(db, user_id)
     if not user:
@@ -46,6 +48,9 @@ def update_user(db: Session, user_id: UUID, user_data: "UserUpdate") -> User | N
     if user_data.name:
         user.name = user_data.name.strip()
     if user_data.email:
+        existing = get_user_by_email(db, user_data.email)
+        if existing and existing.id != user_id:
+            raise UserAlreadyExistsException()
         user.email = user_data.email.strip().lower()
     if user_data.password:
         user.hashed_password = hash_password(user_data.password)

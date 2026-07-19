@@ -7,7 +7,7 @@ class CredentialsException(HTTPException):
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validade credentials.",
-            headers={"WWW_Authenticate": "Bearer"},
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
 
