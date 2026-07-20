@@ -1,4 +1,5 @@
 # IMPORTS
+import os
 import pytest
 
 from fastapi.testclient import TestClient
@@ -12,7 +13,10 @@ from app.db.database import Base, get_db
 
 
 # Use a separate test database
-TEST_DATABASE_URL = "postgresql://rafaelloferrari@localhost:5432/cashmanagements_test"
+TEST_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://rafaelloferrari@localhost:5432/cashmanagements_test"
+)
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
