@@ -1,6 +1,6 @@
 # IMPORTS
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
-
 
 class Settings(BaseSettings):
     # App
@@ -23,8 +23,6 @@ class Settings(BaseSettings):
         "https://localhost:3000", # Next.js dev
     ]
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = ConfigDict(env_file=".env", case_sensitive=True)
 
 settings = Settings()

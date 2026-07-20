@@ -2,11 +2,13 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from app.core.security import decode_token
 from app.core.exceptions import CredentialsException, InvalidTokenTypeException, InactiveUserException
 from app.db.database import get_db # still needs to be created
 from app.models.user import User
+
 
 # Tells FastAPI where the login endpoint is, used in Swagger UI
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
@@ -34,7 +36,7 @@ def get_current_user(
     
     # Importing here to avoid circular imports
     from app.services.user import get_user_by_id
-    user = get_user_by_id(db, int(user_id))
+    user = get_user_by_id(db, UUID(user_id))
 
     if user is None:
         raise CredentialsException()
